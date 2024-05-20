@@ -1,0 +1,87 @@
+{
+	"name": "Notebook 1",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "Anum",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "9084ff90-fa02-4fe7-8bb4-1981070a522d"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/978fc7b8-6535-4009-82bb-d0cc0399aad3/resourceGroups/dev_training_ingestion_rg/providers/Microsoft.Synapse/workspaces/dev-synapse-sandbox-aq/bigDataPools/Anum",
+				"name": "Anum",
+				"type": "Spark",
+				"endpoint": "https://dev-synapse-sandbox-aq.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Anum",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					}
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"df = spark.sql(\"SELECT * FROM nyctaxi.passengercountstats\")\r\n",
+					"df = df.repartition(1) # This ensures we'll get a single file during write()\r\n",
+					"df.write.mode(\"overwrite\").csv(\"/NYCTaxi/PassengerCountStats_csvformat\")\r\n",
+					"df.write.mode(\"overwrite\").parquet(\"/NYCTaxi/PassengerCountStats_parquetformat\")"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df = spark.read.load('https://devingesttraining001.dfs.core.windows.net/synapse001aq/green_tripdata_2018-05.parquet', format='parquet')\r\n",
+					"display(df.limit(10))"
+				],
+				"execution_count": 4
+			}
+		]
+	}
+}

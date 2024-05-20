@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 3",
+	"properties": {
+		"content": {
+			"query": "--USE DataExplorationDB\n--CREATE EXTERNAL DATA SOURCE ExtratestDB\n--WITH ( LOCATION = 'https://devingesttraining001.dfs.core.windows.net')\n--CREATE LOGIN anum WITH PASSWORD = 'My Very Strong Password 1234!';\n--CREATE USER anum FOR LOGIN anum;\n--GO\n--GRANT ADMINISTER DATABASE BULK OPERATIONS TO anum;\n--GO\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n            BULK 'synapse001aq/green_tripdata_2018-05.parquet',\n            DATA_SOURCE = 'ExtratestDB',\n            FORMAT='PARQUET'\n    ) AS [result]\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "DataExplorationDB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

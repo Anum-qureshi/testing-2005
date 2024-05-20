@@ -1,0 +1,73 @@
+{
+	"name": "RunningNYCtaxidata",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "Anum",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "ba75ca03-0945-4667-ad63-9e199708cbe7"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/978fc7b8-6535-4009-82bb-d0cc0399aad3/resourceGroups/dev_training_ingestion_rg/providers/Microsoft.Synapse/workspaces/dev-synapse-sandbox-aq/bigDataPools/Anum",
+				"name": "Anum",
+				"type": "Spark",
+				"endpoint": "https://dev-synapse-sandbox-aq.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Anum",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"# This is a package in preview.\r\n",
+					"from azureml.opendatasets import NycTlcGreen\r\n",
+					"\r\n",
+					"from datetime import datetime\r\n",
+					"from dateutil import parser\r\n",
+					"\r\n",
+					"\r\n",
+					"end_date = parser.parse('2018-06-06')\r\n",
+					"start_date = parser.parse('2018-05-01')\r\n",
+					"nyc_tlc = NycTlcGreen(start_date=start_date, end_date=end_date)\r\n",
+					"nyc_tlc_df = nyc_tlc.to_pandas_dataframe()\r\n",
+					"\r\n",
+					"nyc_tlc_df.info()"
+				],
+				"execution_count": 3
+			}
+		]
+	}
+}

@@ -1,0 +1,34 @@
+{
+	"name": "Starwars_films_data_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "delta films",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "starwars_films_todelta",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-04-12T04:26:53Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 11",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://devingesttraining001.dfs.core.windows.net/synapse001jb/raw_curated/epicor_hvy_extract/part-00000-e61b67b9-3ceb-42c3-8afb-7aee809fd7f0-c000.snappy.parquet',\n        FORMAT = 'PARQUET'\n    ) AS data2;\n    \n\nSELECT\n      YEAR(convert(date, Entry_Date__, 103)) as Year,\n      COUNT(*) AS total_residents\nFROM \n   OPENROWSET(\n        BULK 'https://devingesttraining001.dfs.core.windows.net/synapse001jb/raw_curated/epicor_hvy_extract/part-00000-e61b67b9-3ceb-42c3-8afb-7aee809fd7f0-c000.snappy.parquet',\n        FORMAT = 'PARQUET'\n    ) AS data3 \nGROUP BY \n    YEAR(convert(date, Entry_Date__, 103))\nORDER BY\n    1;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
