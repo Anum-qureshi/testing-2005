@@ -1,0 +1,13 @@
+{
+	"name": "NYCtaxidatademo",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"description": "NYC taxi data",
+		"annotations": [],
+		"type": "PowerBIWorkspace",
+		"typeProperties": {
+			"workspaceID": "a80a9adf-4f56-4772-b3dd-728a6eb21afa",
+			"tenantID": "cf59be9e-a1aa-4ec9-9a5c-da35b98e1607"
+		}
+	}
+}
