@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Notebook1",
-				"type": "SynapseNotebook",
+				"name": "LookupMetadataTable",
+				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -15,16 +15,20 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebook": {
-						"referenceName": "RunningNYCtaxidata",
-						"type": "NotebookReference"
+					"source": {
+						"type": "AzureTableSource",
+						"azureTableSourceIgnoreTableNotFound": false
 					},
-					"snapshot": true
+					"dataset": {
+						"referenceName": "StarWars_AT",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2024-03-12T01:29:46Z"
+		"lastPublishTime": "2024-05-14T06:48:57Z"
 	},
 	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

@@ -1,0 +1,60 @@
+{
+	"name": "PeoplePointToDelta",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "ADLS_Raw",
+						"type": "LinkedServiceReference"
+					},
+					"name": "PeoplePointRaw"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "ADLS_Curated",
+						"type": "LinkedServiceReference"
+					},
+					"name": "PeoplePointSink"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"parameters{",
+				"     TableName as string",
+				"}",
+				"source(useSchema: false,",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'json',",
+				"     fileSystem: 'synapse001hp',",
+				"     folderPath: 'raw_landed/peoplepoint',",
+				"     fileName: ($TableName),",
+				"     documentForm: 'documentPerLine') ~> PeoplePointRaw",
+				"PeoplePointRaw sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'synapse001hp',",
+				"     folderPath: 'raw_curated/peoplepoint',",
+				"     overwrite: true,",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> PeoplePointSink"
+			]
+		}
+	}
+}

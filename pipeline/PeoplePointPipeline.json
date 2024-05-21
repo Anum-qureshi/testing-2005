@@ -1,0 +1,46 @@
+{
+	"name": "PeoplePointPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "PeoplePointToDelta",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "PeoplePointToDelta",
+						"type": "DataFlowReference",
+						"parameters": {
+							"TableName": {
+								"value": "'@{pipeline().parameters.TableName}'",
+								"type": "Expression"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"TableName": {
+				"type": "string",
+				"defaultValue": "CUSTTABLE"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-14T07:23:09Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

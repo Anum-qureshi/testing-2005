@@ -1,0 +1,112 @@
+{
+	"name": "StarWarsPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "StarWarsLookupData",
+				"description": "get the list of all API relative URLs",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureTableSource",
+						"azureTableSourceIgnoreTableNotFound": false
+					},
+					"dataset": {
+						"referenceName": "StarWars_AT",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ForEachItem",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "StarWarsLookupData",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('StarWarsLookupData').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "ExecuteParamPipeline",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "StarWarsParam",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": false,
+								"parameters": {
+									"RelativeURL": {
+										"value": "@item().RelativeURL",
+										"type": "Expression"
+									},
+									"SinkDestination": {
+										"value": "@item().SinkDestination",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "StarWarsDeltaFile",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "ForEachItem",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "StarWarsToDelta",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-02-22T01:14:01Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

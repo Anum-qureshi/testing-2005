@@ -1,0 +1,35 @@
+{
+	"name": "StarWars_Sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "StarWars_ADLS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SinkDestination": {
+				"type": "string"
+			},
+			"SinkFileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(dataset().SinkFileName,'.json')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().SinkDestination",
+					"type": "Expression"
+				},
+				"fileSystem": "synapse001hp"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
