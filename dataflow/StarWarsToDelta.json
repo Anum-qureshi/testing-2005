@@ -1,0 +1,86 @@
+{
+	"name": "StarWarsToDelta",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "StarWars_ADLS",
+						"type": "LinkedServiceReference"
+					},
+					"name": "StarWarsJSON",
+					"description": "Import Data from ADLS"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "StarWars_ADLS",
+						"type": "LinkedServiceReference"
+					},
+					"name": "StarWarsSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "StarWarsFlatten"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          count as short,",
+				"          next as string,",
+				"          previous as string,",
+				"          results as (characters as string[], created as string, director as string, edited as string, episode_id as short, opening_crawl as string, planets as string[], producer as string, release_date as date, species as string[], starships as string[], title as string, url as string, vehicles as string[])[]",
+				"     ),",
+				"     useSchema: false,",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'json',",
+				"     fileSystem: 'synapse001hp',",
+				"     folderPath: 'StarWarsExercise',",
+				"     fileName: 'Films.JSON',",
+				"     documentForm: 'documentPerLine') ~> StarWarsJSON",
+				"StarWarsJSON foldDown(unroll(results, results),",
+				"     mapColumn(",
+				"          characters = results.characters,",
+				"          created = results.created,",
+				"          director = results.director,",
+				"          edited = results.edited,",
+				"          episode_id = results.episode_id,",
+				"          opening_crawl = results.opening_crawl,",
+				"          planets = results.planets,",
+				"          producer = results.producer,",
+				"          release_date = results.release_date,",
+				"          species = results.species,",
+				"          starships = results.starships,",
+				"          title = results.title,",
+				"          url = results.url,",
+				"          vehicles = results.vehicles",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> StarWarsFlatten",
+				"StarWarsFlatten sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'synapse001hp',",
+				"     folderPath: 'StarWarsExercise',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> StarWarsSink"
+			]
+		}
+	}
+}

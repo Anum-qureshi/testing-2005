@@ -1,0 +1,73 @@
+{
+	"name": "StarWarsParam",
+	"properties": {
+		"activities": [
+			{
+				"name": "StarWarsCopyData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "StarWars_Source",
+						"type": "DatasetReference",
+						"parameters": {
+							"RelativeURL": "@pipeline().parameters.RelativeURL"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "StarWars_Sink",
+						"type": "DatasetReference",
+						"parameters": {
+							"SinkDestination": "@pipeline().parameters.SinkDestination",
+							"SinkFileName": "@pipeline().parameters.RelativeURL"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"RelativeURL": {
+				"type": "string",
+				"defaultValue": "people"
+			},
+			"SinkDestination": {
+				"type": "string",
+				"defaultValue": "starwars/people"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-02-22T01:13:39Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
